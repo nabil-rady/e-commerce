@@ -25,4 +25,11 @@ class Category {
     public function getName(): string{
         return $this->name;
     }
+
+    public function toArray(): array {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+        ];
+    }
 }
