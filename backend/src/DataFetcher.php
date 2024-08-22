@@ -8,7 +8,7 @@
     class DataFetcher {
         private static ?EntityManager $entityManager = null;
 
-        private static function getEntityManager(): EntityManager {
+        public static function getEntityManager(): EntityManager {
             if (self::$entityManager === null) {
                 $config = ORMSetup::createAttributeMetadataConfiguration(
                     paths: [__DIR__."/Entities"],
@@ -33,10 +33,19 @@
             return $category->toArray();
         }
 
-        public static function getCategories(): null|array {
+        public static function getCategories(): array {
             $categories = self::getEntityManager()->getRepository(\App\Entities\Category::class)->findAll();
             return array_map(function($category) {
                 return $category->toArray();
             }, $categories);        
+        }
+
+        public static function getAttributesByProductId(string $productId): array{
+            $attributeSets = self::getEntityManager()->getRepository(\App\Entities\AttributeSet::class)->findBy([
+                'productId' => $productId,
+            ]);
+            return array_map(function(\App\Entities\AttributeSet $attributeSet) {
+                return $attributeSet->toArray();
+            }, $attributeSets);
         }
     }

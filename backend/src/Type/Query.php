@@ -49,6 +49,23 @@ class Query extends ObjectType
                             return [];
                         }
                     }
+                ],
+                'attributes' => [
+                    'type' => new ListOfType(TypeRegistry::load(AttributeSet::class)),
+                    'description' => 'Returns attributes of given product',
+                    'args' => [
+                        'productId' => new NonNull(Type::id()),
+                    ] ,
+                    'resolve' => static function($rootValue, array $args): array {
+                        try{
+                            return DataFetcher::getAttributesByProductId($args['productId']);
+                        }
+                        catch(\Exception $e){
+                            error_log($e->getMessage());
+
+                            return [];
+                        }
+                    }
                 ]
             ],
         ]);
