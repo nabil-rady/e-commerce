@@ -55,4 +55,22 @@
                 return $product->toArray();
             }, $products);
         }
+
+        public static function getProductsByCategory(string $categoryName): array {
+            if($categoryName == 'all')  return self::getProducts();
+            
+            $dql = '
+                SELECT p
+                FROM App\Entities\Product p
+                JOIN p.category c
+                WHERE c.name = :categoryName
+            ';
+            $query = self::getEntityManager()->createQuery($dql)
+                ->setParameter('categoryName', $categoryName);
+
+            $products = $query->getResult();
+            return array_map(function(\App\Entities\Product $product) {
+                return $product->toArray();
+            }, $products);
+        }
     }

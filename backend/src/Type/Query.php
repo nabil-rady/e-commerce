@@ -70,9 +70,12 @@ class Query extends ObjectType
                 'products' => [
                     'type' => new ListOfType(TypeRegistry::load(Product::class)),
                     'description' => 'Returns all products',
+                    'args' => [
+                        'category' => new NonNull(Type::string()),
+                    ] ,
                     'resolve' => static function($rootValue, array $args): array {
                         try{
-                            return DataFetcher::getProducts();
+                            return DataFetcher::getProductsByCategory($args['category']);
                         }
                         catch(\Exception $e){
                             error_log($e->getMessage());
