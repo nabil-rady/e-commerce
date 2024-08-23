@@ -20,7 +20,10 @@ class AttributeSet extends ObjectType {
                 'name' => Type::string(),
                 'items' => [
                     'type' => new ListOfType(TypeRegistry::load(Attribute::class)),
-                    'description' => 'Atrribute Items'
+                    'description' => 'Atrribute Items',
+                    'resolve' => static function(array $rootValue){
+                        return $rootValue['items'];
+                    },
                 ]
             ],
         ]);

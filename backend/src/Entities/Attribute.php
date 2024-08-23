@@ -28,15 +28,7 @@ class Attribute {
 
     #[ManyToOne(targetEntity: AttributeSet::class, inversedBy: 'items')]
     #[JoinColumn(name: 'attribute_set_id', referencedColumnName: 'id')]
-    private AttributeSet $attributeSet;
-
-    public function setAttributeSet(AttributeSet $attribute){
-        $this->attributeSet = $attribute;
-    }
-
-    public function getAttribute(): AttributeSet{
-        return $this->attributeSet;
-    }
+    private ?AttributeSet $attributeSet = null;
 
     public function toArray(): array {
         return [

@@ -18,18 +18,10 @@ class Category {
     #[Column()]
     private string $name;
 
-    public function getId(): int{
-        return $this->id;
-    }    
-
-    public function getName(): string{
-        return $this->name;
-    }
-
     public function toArray(): array {
         return [
-            'id' => $this->getId(),
-            'name' => $this->getName(),
+            'id' => $this->id,
+            'name' => $this->name,
         ];
     }
 }

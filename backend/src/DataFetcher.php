@@ -48,4 +48,11 @@
                 return $attributeSet->toArray();
             }, $attributeSets);
         }
+
+        public static function getProducts(): array {
+            $products =  self::getEntityManager()->getRepository(\App\Entities\Product::class)->findAll();
+            return array_map(function(\App\Entities\Product $product) {
+                return $product->toArray();
+            }, $products);
+        }
     }

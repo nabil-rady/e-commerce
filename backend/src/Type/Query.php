@@ -66,6 +66,20 @@ class Query extends ObjectType
                             return [];
                         }
                     }
+                ],
+                'products' => [
+                    'type' => new ListOfType(TypeRegistry::load(Product::class)),
+                    'description' => 'Returns all products',
+                    'resolve' => static function($rootValue, array $args): array {
+                        try{
+                            return DataFetcher::getProducts();
+                        }
+                        catch(\Exception $e){
+                            error_log($e->getMessage());
+
+                            return [];
+                        }
+                    }
                 ]
             ],
         ]);
