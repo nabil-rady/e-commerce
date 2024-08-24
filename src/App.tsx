@@ -1,5 +1,6 @@
 import React from "react";
-import Header from "./Components/Header.tsx";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import ProductListing from "./Components/ProductListing.tsx";
 
 interface AppState {
   currentCategory: string;
@@ -18,12 +19,14 @@ class App extends React.Component {
 
   render(): React.ReactNode {
     return (
-      <div className="bg-white">
-        <Header
-          changeCurrentCategory={this.changeCurrentCategory}
-          currentCategory={this.state.currentCategory}
-        ></Header>
-      </div>
+      <Router>
+        <div className="bg-white">
+          <Switch>
+            <Route path="/:category" component={ProductListing} />
+            <Route path="/" component={ProductListing} />
+          </Switch>
+        </div>
+      </Router>
     );
   }
 }

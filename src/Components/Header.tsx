@@ -1,6 +1,7 @@
 import React from "react";
 import gql from "graphql-tag";
 import { ApolloClient } from "@apollo/client";
+import { Link } from "react-router-dom";
 import ApolloClientContext from "../ApolloClientContext.tsx";
 
 interface HeaderState {
@@ -10,7 +11,6 @@ interface HeaderState {
 }
 
 interface HeaderProps {
-  changeCurrentCategory: (category: string) => void;
   currentCategory: string;
 }
 
@@ -67,26 +67,27 @@ class Header extends React.Component<HeaderProps> {
         </div>
         <div className="flex justify-between w-5/6 pt-2 mx-auto items-center">
           <nav>
-            <ul className="flex gap-3 list-none">
+            <ul className="flex gap-1 list-none">
               {this.state.categories.map((category, index) => (
-                <li
+                <Link
+                  key={index}
+                  to={`/${category}`}
                   data-testid={
                     this.props.currentCategory === category
                       ? "active-category-link"
                       : "category-link"
                   }
-                  key={index}
-                  className={`uppercase hover:text-primary border-primary cursor-pointer px-4 hover:border-b-2 pb-4 ${
-                    category === this.props.currentCategory
-                      ? "text-primary border-b-2"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    this.props.changeCurrentCategory(category);
-                  }}
                 >
-                  {category}
-                </li>
+                  <li
+                    className={`uppercase hover:text-primary border-primary cursor-pointer px-5 hover:border-b-2 pb-4 ${
+                      category === this.props.currentCategory
+                        ? "text-primary border-b-2"
+                        : ""
+                    }`}
+                  >
+                    {category}
+                  </li>
+                </Link>
               ))}
             </ul>
           </nav>
