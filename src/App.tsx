@@ -8,7 +8,7 @@ interface AppState {
 
 class App extends React.Component {
   state: AppState = {
-    currentCategory: "all",
+    currentCategory: "All",
   };
 
   changeCurrentCategory = (category: string) => {

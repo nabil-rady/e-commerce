@@ -57,7 +57,7 @@
         }
 
         public static function getProductsByCategory(string $categoryName): array {
-            if($categoryName == 'all')  return self::getProducts();
+            if(strtolower($categoryName) == 'all')  return self::getProducts();
             
             $dql = '
                 SELECT p

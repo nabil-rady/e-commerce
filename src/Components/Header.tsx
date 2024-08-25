@@ -61,12 +61,12 @@ class Header extends React.Component<HeaderProps> {
 
   render(): React.ReactNode {
     return (
-      <header className="shadow-xl relative">
+      <header className="relative">
         <div className="absolute left-1/2 top-2 -translate-x-1/2 cursor-pointer">
           <img src="/logo.svg" alt="logo" />
         </div>
         <div className="flex justify-between w-5/6 pt-2 mx-auto items-center">
-          <nav>
+          <nav className="font-semibold">
             <ul className="flex gap-1 list-none">
               {this.state.categories.map((category, index) => (
                 <Link
