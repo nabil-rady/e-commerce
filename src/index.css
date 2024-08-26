@@ -5,3 +5,20 @@
 body {
   font-family: "Raleway", sans-serif;
 }
+
+.description h1 {
+  @apply text-xl;
+  @apply font-semibold;
+  @apply my-2;
+}
+
+.description h2 {
+  @apply text-lg;
+  @apply font-medium;
+  @apply my-2;
+}
+
+.description h3 {
+  @apply font-medium;
+  @apply my-2;
+}

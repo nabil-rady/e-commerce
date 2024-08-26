@@ -1,9 +1,8 @@
 import React from "react";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { withRouter, RouteComponentProps, Link } from "react-router-dom";
 import gql from "graphql-tag";
 import { ApolloClient } from "@apollo/client";
 
-import Header from "./Header.tsx";
 import { Product } from "../types/Product.ts";
 import ProductComponent from "./Product.tsx";
 import ApolloClientContext from "../ApolloClientContext.tsx";
@@ -83,23 +82,26 @@ class ProductListing extends React.Component<ProductListingProps> {
 
   render(): React.ReactNode {
     return (
-      <>
-        <Header currentCategory={this.props.match.params.category ?? "All"} />
-        <div className="m-5 w-5/6 mx-auto">
-          <h2 className="text-4xl my-16">
-            {this.props.match.params.category ?? "All"}
-          </h2>
-          <div className="md:grid lg:grid-cols-3 md:grid-cols-2 gap-3 gap-y-5 justify-items-stretch">
-            {this.state.products.map((product, index) => (
-              <ProductComponent
-                key={product.id}
-                product={product}
-                index={index}
-              />
-            ))}
-          </div>
+      <div className="m-5 w-5/6 mx-auto">
+        <h2 className="text-4xl my-16">
+          {this.props.match.params.category ?? "All"}
+        </h2>
+        <div className="md:grid lg:grid-cols-3 md:grid-cols-2 gap-3 gap-y-5 justify-items-stretch">
+          {this.state.products.map((product, index) => (
+            <Link
+              key={product.id}
+              to={{
+                pathname: `/product/${product.id}`,
+                state: {
+                  product,
+                },
+              }}
+            >
+              <ProductComponent product={product} index={index} />
+            </Link>
+          ))}
         </div>
-      </>
+      </div>
     );
   }
 }

@@ -9,7 +9,7 @@ class Attribute extends ObjectType {
     public function __construct()
     {
         parent::__construct([
-            'name' => 'AttributeItem',
+            'name' => 'Attribute',
             'description' => 'Product Attribute',
             'fields' => static fn (): array => [
                 'id' => Type::string(),

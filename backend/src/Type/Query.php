@@ -83,6 +83,23 @@ class Query extends ObjectType
                             return [];
                         }
                     }
+                ],
+                "product" => [
+                    'type' => TypeRegistry::load(Product::class),
+                    'description' => 'Returns product with certain id',
+                    'args' => [
+                        'id' => new NonNull(Type::id()),
+                    ] ,
+                    'resolve' => static function($rootValue, array $args): array {
+                        try{
+                            return DataFetcher::getProductById($args['id']);
+                        }
+                        catch(\Exception $e){
+                            error_log($e->getMessage());
+
+                            return [];
+                        }
+                    }
                 ]
             ],
         ]);

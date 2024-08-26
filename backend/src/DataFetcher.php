@@ -73,4 +73,11 @@
                 return $product->toArray();
             }, $products);
         }
+
+        public static function getProductById(string $productId): array {
+            $product = self::getEntityManager()->find(\App\Entities\Product::class, $productId);
+            if($product)
+                return $product->toArray();
+            return null;
+        }
     }

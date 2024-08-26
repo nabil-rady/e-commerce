@@ -12,7 +12,7 @@ class AttributeSet extends ObjectType {
     public function __construct()
     {
         parent::__construct([
-            'name' => 'Attribute',
+            'name' => 'AttributeSet',
             'description' => 'Product Attribute Set',
             'fields' => static fn (): array => [
                 'id' => Type::string(),

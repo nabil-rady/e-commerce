@@ -1,6 +1,7 @@
 import React from "react";
 
 import type { Product } from "../types/Product";
+import toKebabCase from "../utils/toKebabCase.ts";
 
 interface ProductComponentProps {
   index: number;
@@ -38,7 +39,7 @@ class ProductComponent extends React.Component<ProductComponentProps> {
     return (
       <div
         className={getClassName(this.props.product, this.props.index)}
-        data-testid={this.props.product.id}
+        data-testid={toKebabCase(this.props.product.name)}
       >
         <div
           className={
