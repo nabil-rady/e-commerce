@@ -4,38 +4,42 @@ import toKebabCase from "../utils/toKebabCase.ts";
 
 interface AttributeProps {
   attributeSet: AttributeSet;
-}
-
-interface AttributeState {
   selectedAttribute: Attribute;
+  index: number;
+  overlay?: boolean;
+  setAttribute?: (attirbute: Attribute, index: number) => void;
 }
 
-class SwatchAttribute extends React.Component<AttributeProps, AttributeState> {
-  state = {
-    selectedAttribute: this.props.attributeSet.items[0],
-  };
-
-  setAttribute(attribute: Attribute) {
-    this.setState({
-      selectedAttribute: attribute,
-    });
+class SwatchAttribute extends React.Component<AttributeProps> {
+  setAttribute(attirbute: Attribute, index: number) {
+    if (this.props.setAttribute !== undefined)
+      this.props.setAttribute(attirbute, index);
   }
 
   render(): React.ReactNode {
+    const attributeContainerClassName = this.props.overlay
+      ? "w-[20px] h-[20px] flex justify-center border-2 border-black enabled:hover:border-primary has-[:checked]:border-primary enabled:cursor-pointer"
+      : "w-[36px] h-[36px] flex justify-center border-2 border-black enabled:hover:border-primary has-[:checked]:border-primary enabled:cursor-pointer";
     return (
-      <div className="flex my-2 gap-2">
+      <div className="flex flex-wrap my-2 gap-2">
         {this.props.attributeSet.items.map((attribute, index) => (
           <label
             key={attribute.id}
-            htmlFor={
-              toKebabCase(this.props.attributeSet.id) +
-              "-" +
-              toKebabCase(attribute.id)
-            }
             onClick={() => {
-              this.setAttribute(attribute);
+              this.setAttribute(attribute, index);
             }}
-            className="w-[36px] h-[36px] flex justify-center border-2 border-black hover:border-primary has-[:checked]:border-primary cursor-pointer"
+            data-testid={
+              this.props.overlay
+                ? "cart-item-attribute-" +
+                  toKebabCase(this.props.attributeSet.name) +
+                  "-" +
+                  toKebabCase(attribute.id) +
+                  (this.props.selectedAttribute.id === attribute.id
+                    ? "-selected"
+                    : "")
+                : ""
+            }
+            className={attributeContainerClassName}
           >
             <div
               className="w-full box-border m-[2.5px]"
@@ -44,14 +48,15 @@ class SwatchAttribute extends React.Component<AttributeProps, AttributeState> {
               }}
             ></div>
             <input
+              aria-disabled={this.props.overlay}
+              disabled={this.props.overlay}
               type="radio"
-              id={
-                toKebabCase(this.props.attributeSet.id) +
-                "-" +
-                toKebabCase(attribute.id)
-              }
-              defaultChecked={index === 0}
-              name={toKebabCase(this.props.attributeSet.id)}
+              data-displayvalue={attribute.displayValue}
+              data-id={attribute.id}
+              onChange={() => {
+                this.setAttribute(attribute, this.props.index);
+              }}
+              checked={this.props.selectedAttribute.id === attribute.id}
               className="appearance-none"
             />
           </label>
@@ -61,45 +66,40 @@ class SwatchAttribute extends React.Component<AttributeProps, AttributeState> {
   }
 }
 
-class TextAttribute extends React.Component<AttributeProps, AttributeState> {
-  state = {
-    selectedAttribute: this.props.attributeSet.items[0],
-  };
-
-  setAttribute(attribute: Attribute) {
-    this.setState({
-      selectedAttribute: attribute,
-    });
+class TextAttribute extends React.Component<AttributeProps> {
+  setAttribute(attirbute: Attribute, index: number) {
+    if (this.props.setAttribute !== undefined)
+      this.props.setAttribute(attirbute, index);
   }
 
   render(): React.ReactNode {
+    const attributeContainerClassName = this.props.overlay
+      ? "min-w-[24px] min-h-[24px] p-1 text-sm border-2 border-black flex justify-center items-center font-['Source_Sans_3'] has-[:enabled]:focus:bg-darkGray has-[:enabled]:focus:text-white has-[:enabled]:hover:bg-darkGray has-[:enabled]:hover:text-white has-[:checked]:bg-darkGray has-[:checked]:text-white has-[:enabled]:cursor-pointer"
+      : "min-w-[64px] min-h-[44px] p-1 border-2 border-black flex justify-center items-center font-['Source_Sans_3'] has-[:enabled]:focus:bg-darkGray has-[:enabled]:focus:text-white has-[:enabled]:hover:bg-darkGray has-[:enabled]:hover:text-white has-[:checked]:bg-darkGray has-[:checked]:text-white has-[:enabled]:cursor-pointer";
     return (
       <div
-        data-testid={toKebabCase(this.props.attributeSet.id)}
-        className="flex my-2 gap-2"
+        data-testid={
+          this.props.overlay
+            ? "cart-item-attribute-" + toKebabCase(this.props.attributeSet.name)
+            : toKebabCase(this.props.attributeSet.name)
+        }
+        className="flex flex-wrap my-2 gap-2"
       >
         {this.props.attributeSet.items.map((attribute, index) => (
-          <label
-            key={attribute.id}
-            htmlFor={
-              toKebabCase(this.props.attributeSet.id) +
-              "-" +
-              toKebabCase(attribute.id)
-            }
-            className="w-16 h-11 border-2 border-black flex justify-center items-center font-['Source_Sans_3'] focus:bg-selected focus:text-white hover:bg-selected hover:text-white has-[:checked]:bg-selected has-[:checked]:text-white cursor-pointer"
-          >
+          <label key={attribute.id} className={attributeContainerClassName}>
             {attribute.displayValue}
             <input
+              aria-disabled={this.props.overlay}
+              disabled={this.props.overlay}
               type="radio"
-              id={
-                toKebabCase(this.props.attributeSet.id) +
-                "-" +
-                toKebabCase(attribute.id)
-              }
-              defaultChecked={index === 0}
-              name={toKebabCase(this.props.attributeSet.id)}
+              data-displayvalue={attribute.displayValue}
+              data-id={attribute.id}
+              checked={this.props.selectedAttribute.id === attribute.id}
+              onChange={() => {
+                this.setAttribute(attribute, this.props.index);
+              }}
               value={attribute.value}
-              className="appearance-none checked:bg-selected checked:text-white"
+              className="appearance-none checked:bg-darkGray checked:text-white"
             />
           </label>
         ))}
@@ -108,12 +108,34 @@ class TextAttribute extends React.Component<AttributeProps, AttributeState> {
   }
 }
 
-function renderAttribute(attributeSet: AttributeSet) {
+function renderAttribute(
+  attributeSet: AttributeSet,
+  selectedAttribute: Attribute,
+  index: number,
+  setAttribute?: (attribute: Attribute, index: number) => void,
+  overlay?: boolean
+) {
   switch (attributeSet.type) {
     case "swatch":
-      return <SwatchAttribute attributeSet={attributeSet} />;
+      return (
+        <SwatchAttribute
+          attributeSet={attributeSet}
+          selectedAttribute={selectedAttribute}
+          overlay={overlay}
+          setAttribute={setAttribute}
+          index={index}
+        />
+      );
     default:
-      return <TextAttribute attributeSet={attributeSet} />;
+      return (
+        <TextAttribute
+          attributeSet={attributeSet}
+          selectedAttribute={selectedAttribute}
+          overlay={overlay}
+          setAttribute={setAttribute}
+          index={index}
+        />
+      );
   }
 }
 
@@ -122,7 +144,13 @@ class AttributeComponent extends React.Component<AttributeProps> {
     return (
       <div>
         <h2 className="text-lg font-bold">{this.props.attributeSet.name}:</h2>
-        {renderAttribute(this.props.attributeSet)}
+        {renderAttribute(
+          this.props.attributeSet,
+          this.props.selectedAttribute,
+          this.props.index,
+          this.props.setAttribute,
+          this.props.overlay
+        )}
       </div>
     );
   }

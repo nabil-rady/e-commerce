@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  position: relative;
+  min-height: 100vh;
+}
+
 body {
   font-family: "Raleway", sans-serif;
 }

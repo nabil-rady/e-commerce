@@ -4,7 +4,8 @@ import { ApolloClient } from "@apollo/client";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 
 import ApolloClientContext from "../ApolloClientContext.tsx";
-import { Product } from "../types/Product";
+import { Product } from "../types/Product.ts";
+import { Attribute } from "../types/Attribute.ts";
 import Carousel from "./Carousel.tsx";
 import ProductDetails from "./ProductDetails.tsx";
 
@@ -12,8 +13,12 @@ interface ProductDetailsPageProps
   extends RouteComponentProps<
     { productId: string },
     {},
-    { product?: Product }
-  > {}
+    {
+      product?: Product;
+    }
+  > {
+  addToCart: (product: Product, selectedAttributes?: Attribute[]) => void;
+}
 
 interface ProductDetailsPageState {
   product: Product | null;
@@ -89,7 +94,10 @@ class ProductDetailsPage extends React.Component<
     return (
       <div className="w-5/6 mx-auto mt-16 lg:flex gap-24">
         <Carousel gallery={this.state.product.gallery} />
-        <ProductDetails product={this.state.product} />
+        <ProductDetails
+          addToCart={this.props.addToCart}
+          product={this.state.product}
+        />
       </div>
     );
   }

@@ -1,7 +1,11 @@
 import { Product } from "../types/Product";
+import { Attribute } from "./Attribute";
 
-type ProductWithQuantity = Product & {
-  quantity: number;
-};
-
-export type Cart = ProductWithQuantity[];
+export type Cart = Record<
+  string,
+  {
+    product: Product;
+    quantity: number;
+    selectedAttributes: Attribute[];
+  }[]
+>;

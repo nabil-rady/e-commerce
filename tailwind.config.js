@@ -5,10 +5,13 @@ module.exports = {
     extend: {
       colors: {
         primary: "#5ECE7B",
-        selected: "#1D1F22",
+        darkGray: "#1D1F22",
       },
       flexGrow: {
         5: "5",
+      },
+      fontFamily: {
+        roboto: "Roboto, sans-serif",
       },
     },
   },

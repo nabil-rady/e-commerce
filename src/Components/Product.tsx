@@ -2,10 +2,12 @@ import React from "react";
 
 import type { Product } from "../types/Product";
 import toKebabCase from "../utils/toKebabCase.ts";
+import { Attribute } from "../types/Attribute.ts";
 
 interface ProductComponentProps {
   index: number;
   product: Product;
+  addToCart: (product: Product, selectedAttributes?: Attribute[]) => void;
 }
 
 function getClassName(product: Product, index: number): string {
@@ -48,7 +50,13 @@ class ProductComponent extends React.Component<ProductComponentProps> {
           }
         >
           {this.props.product.inStock && (
-            <button className="w-12 h-12 rounded-full absolute z-10 bg-primary bottom-0 right-5 translate-y-1/2 flex justify-center items-center invisible group-hover:visible hover:scale-110 transition-transform">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                this.props.addToCart(this.props.product);
+              }}
+              className="w-12 h-12 rounded-full absolute z-10 bg-primary bottom-0 right-5 translate-y-1/2 flex justify-center items-center invisible group-hover:visible hover:scale-110 transition-transform"
+            >
               <img src="/cart-white.svg" alt="cart" />
             </button>
           )}

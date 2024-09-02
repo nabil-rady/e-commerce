@@ -4,11 +4,15 @@ import gql from "graphql-tag";
 import { ApolloClient } from "@apollo/client";
 
 import { Product } from "../types/Product.ts";
+import { Attribute } from "../types/Attribute.ts";
 import ProductComponent from "./Product.tsx";
 import ApolloClientContext from "../ApolloClientContext.tsx";
 
 interface ProductListingProps
-  extends RouteComponentProps<{ category?: string }> {}
+  extends RouteComponentProps<{ categoryName?: string }> {
+  addToCart: (product: Product, selectedAttributes?: Attribute[]) => void;
+  changeCurrentCategory: (category: string) => void;
+}
 
 interface ProductListingState {
   products: Product[];
@@ -59,7 +63,7 @@ class ProductListing extends React.Component<ProductListingProps> {
       const result = await client.query<{
         products: Product[];
       }>({
-        query: getProductQuery(this.props.match.params.category ?? "All"),
+        query: getProductQuery(this.props.match.params.categoryName ?? "All"),
       });
       this.setState({
         products: result.data.products,
@@ -71,12 +75,18 @@ class ProductListing extends React.Component<ProductListingProps> {
   }
 
   componentDidUpdate(prevProps: Readonly<ProductListingProps>) {
-    if (this.props.match.params.category !== prevProps.match.params.category) {
+    if (
+      this.props.match.params.categoryName !==
+      prevProps.match.params.categoryName
+    ) {
       this.fetchProducts().catch((err) => console.error(err));
     }
   }
 
   componentDidMount() {
+    this.props.changeCurrentCategory(
+      this.props.match.params.categoryName ?? "All"
+    );
     this.fetchProducts().catch((err) => console.error(err));
   }
 
@@ -84,7 +94,7 @@ class ProductListing extends React.Component<ProductListingProps> {
     return (
       <div className="m-5 w-5/6 mx-auto">
         <h2 className="text-4xl my-16">
-          {this.props.match.params.category ?? "All"}
+          {this.props.match.params.categoryName ?? "All"}
         </h2>
         <div className="md:grid lg:grid-cols-3 md:grid-cols-2 gap-3 gap-y-5 justify-items-stretch">
           {this.state.products.map((product, index) => (
@@ -97,7 +107,11 @@ class ProductListing extends React.Component<ProductListingProps> {
                 },
               }}
             >
-              <ProductComponent product={product} index={index} />
+              <ProductComponent
+                addToCart={this.props.addToCart}
+                product={product}
+                index={index}
+              />
             </Link>
           ))}
         </div>

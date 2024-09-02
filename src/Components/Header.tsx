@@ -3,6 +3,8 @@ import gql from "graphql-tag";
 import { ApolloClient } from "@apollo/client";
 import { Link } from "react-router-dom";
 import ApolloClientContext from "../ApolloClientContext.tsx";
+import { Cart } from "../types/Cart.ts";
+import countProductsInCart from "../utils/countProductsInCart.ts";
 
 interface HeaderState {
   categories: string[];
@@ -12,6 +14,11 @@ interface HeaderState {
 
 interface HeaderProps {
   currentCategory: string;
+  cart: Cart;
+  overlayOpen: boolean;
+  changeCurrentCategory: (category: string) => void;
+  toggleOverlay: () => void;
+  closeOverlay: () => void;
 }
 
 interface Category {
@@ -26,7 +33,7 @@ const GET_CATEGORIES_QUERY = gql`
   }
 `;
 
-class Header extends React.Component<HeaderProps> {
+class Header extends React.Component<HeaderProps, HeaderState> {
   static contextType = ApolloClientContext;
   context!: ApolloClient<object>;
 
@@ -60,6 +67,7 @@ class Header extends React.Component<HeaderProps> {
   }
 
   render(): React.ReactNode {
+    const count = countProductsInCart(this.props.cart);
     return (
       <header className="relative">
         <div className="absolute left-1/2 top-2 -translate-x-1/2 cursor-pointer">
@@ -72,6 +80,7 @@ class Header extends React.Component<HeaderProps> {
                 <Link
                   key={index}
                   to={`/${category}`}
+                  onClick={() => this.props.changeCurrentCategory(category)}
                   data-testid={
                     this.props.currentCategory === category
                       ? "active-category-link"
@@ -91,9 +100,17 @@ class Header extends React.Component<HeaderProps> {
               ))}
             </ul>
           </nav>
-          <div className="cursor-pointer">
+          <button
+            className="relative cursor-pointer"
+            onClick={this.props.toggleOverlay}
+          >
+            {count !== 0 && (
+              <div className="absolute font-roboto flex justify-center items-center w-[20px] h-[20px] leading-none rounded-full font-bold text-sm text-white bg-darkGray right-0 top-0 translate-x-1/2 -translate-y-1/2">
+                {count}
+              </div>
+            )}
             <img src="/cart.svg" alt="logo" />
-          </div>
+          </button>
         </div>
       </header>
     );
