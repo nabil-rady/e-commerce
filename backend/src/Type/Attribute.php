@@ -12,6 +12,7 @@ class Attribute extends ObjectType {
             'name' => 'Attribute',
             'description' => 'Product Attribute',
             'fields' => static fn (): array => [
+                '_id' => Type::id(),
                 'id' => Type::string(),
                 'displayValue' => Type::string(),
                 'value' => Type::string(),

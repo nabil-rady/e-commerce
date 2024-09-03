@@ -1,19 +1,88 @@
 import React from "react";
-import countProductsInCart from "../utils/countProductsInCart.ts";
-import { Cart } from "../types/Cart.ts";
+import gql from "graphql-tag";
+import { ApolloClient } from "@apollo/client";
+
+import Loading from "./Loading.tsx";
 import AttributesComponent from "./Attributes.tsx";
-import { Product } from "../types/Product.ts";
+import ApolloClientContext from "../ApolloClientContext.tsx";
+
+import countProductsInCart from "../utils/countProductsInCart.ts";
 import totalPriceInCart from "../utils/totalPriceInCart.ts";
+
+import { Cart } from "../types/Cart.ts";
+import { Product } from "../types/Product.ts";
+
+function createOrderMutation(cart: Cart) {
+  const productIds: string[] = [];
+  const quantities: number[] = [];
+  const selectedAttributes: number[][] = [];
+  for (const productId in cart) {
+    for (let i = 0; i < cart[productId].length; i++) {
+      productIds.push(productId);
+      quantities.push(cart[productId][i].quantity);
+      selectedAttributes.push(
+        cart[productId][i].selectedAttributes.map(
+          (selectedAttribute) => selectedAttribute._id
+        )
+      );
+    }
+  }
+
+  return gql`
+    mutation Mutation {
+      createOrder(
+        productIds: ${JSON.stringify(productIds)},
+        quantities: ${JSON.stringify(quantities)},
+        selectedAttributesIds: ${JSON.stringify(selectedAttributes)}
+      ) {
+        id
+      }
+    }`;
+}
 
 interface CartOverlayProps {
   cart: Cart;
   open?: boolean;
+  emptyCart: () => void;
   closeOverlay: () => void;
   incQuantity: (product: Product, index: number) => void;
   decQuantity: (product: Product, index: number) => void;
 }
 
-class CartOverlay extends React.Component<CartOverlayProps> {
+interface CartOverlayState {
+  loading: boolean;
+  error: Error | null;
+}
+
+class CartOverlay extends React.Component<CartOverlayProps, CartOverlayState> {
+  static contextType = ApolloClientContext;
+  context!: ApolloClient<object>;
+
+  state = {
+    loading: false,
+    error: null,
+  };
+
+  async createOrder() {
+    const client = this.context;
+    this.setState({ loading: true, error: null });
+
+    try {
+      console.log(createOrderMutation(this.props.cart));
+      await client.mutate({
+        mutation: createOrderMutation(this.props.cart),
+      });
+      this.props.emptyCart();
+    } catch (error) {
+      this.setState({ error: error as Error, loading: false });
+      console.error(error);
+    } finally {
+      this.setState({
+        loading: false,
+      });
+    }
+  }
+
   render(): React.ReactNode {
     const count = countProductsInCart(this.props.cart);
     return (
@@ -89,10 +158,15 @@ class CartOverlay extends React.Component<CartOverlayProps> {
             </p>
           </div>
           <button
-            disabled={countProductsInCart(this.props.cart) === 0}
-            className="my-4 w-full py-4 px-8 font-semibold uppercase text-white bg-primary disabled:opacity-50 disabled:cursor-default"
+            disabled={
+              countProductsInCart(this.props.cart) === 0 || this.state.loading
+            }
+            onClick={() => {
+              this.createOrder();
+            }}
+            className="my-4 w-full py-4 px-8 font-semibold uppercase text-white bg-primary transition-transform enabled:hover:scale-105 disabled:opacity-50 disabled:cursor-default flex justify-center"
           >
-            Place order
+            {this.state.loading && <Loading />} Place order
           </button>
         </div>
       </div>

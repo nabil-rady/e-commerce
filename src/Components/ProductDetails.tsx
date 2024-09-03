@@ -1,5 +1,6 @@
 import React from "react";
 import parse from "html-react-parser";
+
 import AttributesComponent from "./Attributes.tsx";
 
 import { Product } from "../types/Product";
@@ -43,20 +44,6 @@ class ProductDetails extends React.Component<
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            // const selectedAttributes: Attribute[] = [];
-            // for (const attribtueSet of this.props.product.attributes) {
-            //   const el = document.querySelector(
-            //     `input[name="${toKebabCase(attribtueSet.id)}"]:checked`
-            //   ) as HTMLInputElement | null;
-            //   if (!el) {
-            //     throw Error("Improper form names");
-            //   }
-            //   selectedAttributes.push({
-            //     id: el.dataset.id as string,
-            //     value: el.value,
-            //     displayValue: el.dataset.displayvalue as string,
-            //   });
-            // }
             this.props.addToCart(
               this.props.product,
               this.state.selectedAttributes
@@ -75,7 +62,7 @@ class ProductDetails extends React.Component<
           <button
             type="submit"
             data-testid="add-to-cart"
-            className="my-4 w-full py-4 px-8 font-semibold text-white bg-primary"
+            className="my-4 w-full py-4 px-8 font-semibold relative text-white bg-primary hover:scale-105 transition-transform"
           >
             Add to cart
           </button>

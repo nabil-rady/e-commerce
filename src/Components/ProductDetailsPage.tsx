@@ -42,6 +42,7 @@ function getProductQuery(productId: string) {
                   name
                   type
                   items {
+                    _id  
                     id
                     value
                     displayValue

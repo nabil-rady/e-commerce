@@ -149,6 +149,12 @@ class App extends React.Component<{}, AppState> {
     });
   };
 
+  emptyCart = () => {
+    this.setState({
+      cart: {},
+    });
+  };
+
   render(): React.ReactNode {
     return (
       <Router>
@@ -192,6 +198,7 @@ class App extends React.Component<{}, AppState> {
           <CartOverlay
             open={this.state.overlayOpen}
             cart={this.state.cart}
+            emptyCart={this.emptyCart}
             closeOverlay={this.closeOverlay}
             incQuantity={this.incQuantity}
             decQuantity={this.decQuantity}

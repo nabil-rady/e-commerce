@@ -1,4 +1,5 @@
 export interface Attribute {
+  _id: number;
   id: string;
   value: string;
   displayValue: string;

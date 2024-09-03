@@ -38,7 +38,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   context!: ApolloClient<object>;
 
   state: HeaderState = {
-    categories: [],
+    categories: ["All", "Clothes", "Tech"],
     error: null,
     loading: true,
   };

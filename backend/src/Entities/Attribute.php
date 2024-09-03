@@ -32,6 +32,7 @@ class Attribute {
 
     public function toArray(): array {
         return [
+            '_id' => $this->id,
             'id' => $this->attributeId,
             'displayValue' => $this->displayValue,
             'value' => $this->value,
