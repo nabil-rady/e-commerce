@@ -6,6 +6,7 @@ use GraphQL\GraphQL as GraphQLBase;
 use GraphQL\Type\Schema;
 use GraphQL\Type\SchemaConfig;
 use App\Type\Query;
+use App\Type\Mutation;
 use RuntimeException;
 use Throwable;
 
@@ -15,6 +16,7 @@ class GraphQL {
             $schema = new Schema(
                 (new SchemaConfig())
                 ->setQuery(new Query())
+                ->setMutation(new Mutation())
             );
         
             $rawInput = file_get_contents('php://input');

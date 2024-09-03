@@ -80,4 +80,61 @@
                 return $product->toArray();
             return null;
         }
+
+        public static function createOrder(array $productIds, array $quantites, array $selectedAttributesIds): array{
+            if(count($productIds) !== count($quantites) || count($selectedAttributesIds) !== count($quantites) || count($productIds) !== count($selectedAttributesIds)){
+                throw new \Exception('Improper request body.');
+            }
+
+            $products = [];
+            foreach($productIds as $productId) {
+                $product = self::getEntityManager()->find(\App\Entities\Product::class, $productId);
+                if($product == null){
+                    throw new \Exception('Product not found: ' . $productId);
+                }
+                $products[] = $product;
+            }    
+
+            $orderItems = [];
+            foreach ($products as $index => $product) {
+                $orderItem = new \App\Entities\OrderItem();
+                $orderItem->setProduct($product);
+                $orderItem->setQuantity($quantites[$index]);
+
+                foreach ($selectedAttributesIds[$index] as $selectedAttributeId) {
+                    $attribute = self::getEntityManager()->getRepository(\App\Entities\Attribute::class)->find($selectedAttributeId);
+                    
+                    if (!$attribute) {
+                        throw new \Exception('Attribute not found: ' . $selectedAttributeId);
+                    }
+
+                    $orderItemAttribute = new \App\Entities\OrderItemAttribute();
+                    $orderItemAttribute->setAttribute($attribute);
+                    $orderItemAttribute->setOrderItem($orderItem);
+
+                    $orderItem->addAttribute($orderItemAttribute);
+                }
+
+                $orderItems[] = $orderItem;
+            }
+
+            $order = new \App\Entities\Order();
+            foreach ($orderItems as $orderItem) {
+                $order->addItem($orderItem);
+                $orderItem->setOrder($order);
+            }
+
+            self::getEntityManager()->persist($order);
+
+            foreach ($orderItems as $orderItem) {
+                self::getEntityManager()->persist($orderItem);
+                foreach ($orderItem->getAttributes() as $attribute) {
+                    self::getEntityManager()->persist($attribute);
+                }
+            }
+
+            self::getEntityManager()->flush();
+
+            return $order->toArray();
+        }
     }
