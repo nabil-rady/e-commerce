@@ -37,7 +37,7 @@
             $categories = self::getEntityManager()->getRepository(\App\Entities\Category::class)->findAll();
             return array_map(function($category) {
                 return $category->toArray();
-            }, $categories);        
+            }, $categories);
         }
 
         public static function getAttributesByProductId(string $productId): array{

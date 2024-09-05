@@ -22,9 +22,11 @@ $routeInfo = $dispatcher->dispatch(
 
 switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:
+        http_response_code(404);
         echo "<h1>404 not found.</h1>";
         break;
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+        http_response_code(405);
         $allowedMethods = $routeInfo[1];
         echo "<h1>Method not allowed.</h1>";
         break;

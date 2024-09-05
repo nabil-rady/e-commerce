@@ -28,9 +28,13 @@ class GraphQL {
             $query = $input['query'];
         
             $result = GraphQLBase::executeQuery($schema, $query);
+            if(count($result->errors) !== 0){
+                http_response_code(500);
+            }
             $output = $result->toArray();
         } catch (Throwable $e) {
             error_log($e->getMessage());
+            http_response_code(500);
             $output = [
                 'error' => [
                     'message' => $e->getMessage(),

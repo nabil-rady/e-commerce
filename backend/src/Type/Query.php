@@ -23,31 +23,14 @@ class Query extends ObjectType
                         'id' => new NonNull(Type::id()),
                     ],
                     'resolve' => static function($rootValue, array $args): array {
-                        try{
-                            return DataFetcher::getCategory($args['id']);
-                        }
-                        catch(\Exception $e){
-                            error_log($e->getMessage());
-
-                            return [
-                                'id' => null,
-                                'name' => null,
-                            ];
-                        }
+                        return DataFetcher::getCategory($args['id']);
                     }
                 ],
                 'categories' => [
                     'type' => new ListOfType(TypeRegistry::load(Category::class)),
                     'description' => 'Returns all categories',
                     'resolve' => static function($rootValue, array $args): array {
-                        try{
-                            return DataFetcher::getCategories();
-                        }
-                        catch(\Exception $e){
-                            error_log($e->getMessage());
-
-                            return [];
-                        }
+                        return DataFetcher::getCategories();
                     }
                 ],
                 'attributes' => [
@@ -57,14 +40,7 @@ class Query extends ObjectType
                         'productId' => new NonNull(Type::id()),
                     ] ,
                     'resolve' => static function($rootValue, array $args): array {
-                        try{
-                            return DataFetcher::getAttributesByProductId($args['productId']);
-                        }
-                        catch(\Exception $e){
-                            error_log($e->getMessage());
-
-                            return [];
-                        }
+                        return DataFetcher::getAttributesByProductId($args['productId']);
                     }
                 ],
                 'products' => [
@@ -74,14 +50,7 @@ class Query extends ObjectType
                         'category' => new NonNull(Type::string()),
                     ] ,
                     'resolve' => static function($rootValue, array $args): array {
-                        try{
-                            return DataFetcher::getProductsByCategory($args['category']);
-                        }
-                        catch(\Exception $e){
-                            error_log($e->getMessage());
-
-                            return [];
-                        }
+                        return DataFetcher::getProductsByCategory($args['category']);
                     }
                 ],
                 "product" => [
@@ -91,14 +60,7 @@ class Query extends ObjectType
                         'id' => new NonNull(Type::id()),
                     ] ,
                     'resolve' => static function($rootValue, array $args): array {
-                        try{
-                            return DataFetcher::getProductById($args['id']);
-                        }
-                        catch(\Exception $e){
-                            error_log($e->getMessage());
-
-                            return [];
-                        }
+                        return DataFetcher::getProductById($args['id']);
                     }
                 ]
             ],
