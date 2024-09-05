@@ -86,7 +86,7 @@ class ProductDetailsPage extends React.Component<
 
   componentDidMount() {
     if (!this.state.product) {
-      this.fetchProduct();
+      this.fetchProduct().catch((err) => console.error(err));
     }
   }
 

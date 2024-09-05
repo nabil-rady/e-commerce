@@ -1,6 +1,7 @@
 import React from "react";
 import gql from "graphql-tag";
 import { ApolloClient } from "@apollo/client";
+import { toast } from "react-toastify";
 
 import Loading from "./Loading.tsx";
 import AttributesComponent from "./Attributes.tsx";
@@ -73,9 +74,11 @@ class CartOverlay extends React.Component<CartOverlayProps, CartOverlayState> {
         mutation: createOrderMutation(this.props.cart),
       });
       this.props.emptyCart();
+      toast("Order placed successfuly");
     } catch (error) {
       this.setState({ error: error as Error, loading: false });
       console.error(error);
+      toast.error(error.message);
     } finally {
       this.setState({
         loading: false,

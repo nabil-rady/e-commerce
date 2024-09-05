@@ -12,7 +12,7 @@ interface ProductComponentProps {
 
 function getClassName(product: Product, index: number): string {
   let className =
-    "box-border my-5 mx-auto md:mx-0 md:my-0 w-fit cursor-pointer group lg:justify-self-start";
+    "product-card p-4 box-border my-5 mx-auto md:mx-0 md:my-0 w-fit cursor-pointer group lg:justify-self-start";
   if (index % 2 === 1) {
     className += " md:justify-self-end";
   }

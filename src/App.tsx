@@ -1,4 +1,5 @@
 import React from "react";
+import { toast, ToastContainer } from "react-toastify";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import ProductListing from "./Components/ProductListing.tsx";
 import ProductDetailsPage from "./Components/ProductDetailsPage.tsx";
@@ -9,6 +10,8 @@ import { Cart } from "./types/Cart.ts";
 import { Product } from "./types/Product.ts";
 import { Attribute } from "./types/Attribute.ts";
 import areObjectsEqual from "./utils/areObjectsEqual.ts";
+
+import "react-toastify/dist/ReactToastify.css";
 
 interface AppState {
   currentCategory: string;
@@ -86,6 +89,9 @@ class App extends React.Component<{}, AppState> {
           ],
         },
       };
+    });
+    toast("Product added to cart", {
+      autoClose: 1500,
     });
   };
 
@@ -203,6 +209,7 @@ class App extends React.Component<{}, AppState> {
             incQuantity={this.incQuantity}
             decQuantity={this.decQuantity}
           />
+          <ToastContainer position="bottom-left" autoClose={2500} />
         </div>
       </Router>
     );
