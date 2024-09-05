@@ -4,6 +4,7 @@
     use Doctrine\ORM\EntityManager;
     use Doctrine\ORM\ORMSetup;
     use Doctrine\DBAL\DriverManager;
+    use GraphQL\Error\Error;
 
     class DataFetcher {
         private static ?EntityManager $entityManager = null;
@@ -27,10 +28,13 @@
             return self::$entityManager;
         }
 
-        public static function getCategory(int $id): null|array {
+        public static function getCategory(int $id): Error|array {
             $category = self::getEntityManager()->find(\App\Entities\Category::class, $id);
-            if(!$category)   return null;
-            return $category->toArray();
+            if($category)   {
+                return $category->toArray();
+            }
+            http_response_code(404);
+            throw new Error("Category not found");
         }
 
         public static function getCategories(): array {
@@ -74,23 +78,26 @@
             }, $products);
         }
 
-        public static function getProductById(string $productId): array {
+        public static function getProductById(string $productId): array|Error {
             $product = self::getEntityManager()->find(\App\Entities\Product::class, $productId);
             if($product)
                 return $product->toArray();
-            return null;
+            http_response_code(404);
+            throw new Error("Product not found");
         }
 
-        public static function createOrder(array $productIds, array $quantites, array $selectedAttributesIds): array{
+        public static function createOrder(array $productIds, array $quantites, array $selectedAttributesIds): array|Error {
             if(count($productIds) !== count($quantites) || count($selectedAttributesIds) !== count($quantites) || count($productIds) !== count($selectedAttributesIds)){
-                throw new \Exception('Improper request body.');
+                http_response_code(400);
+                throw new Error('Improper request body');
             }
 
             $products = [];
             foreach($productIds as $productId) {
                 $product = self::getEntityManager()->find(\App\Entities\Product::class, $productId);
                 if($product == null){
-                    throw new \Exception('Product not found: ' . $productId);
+                    http_response_code(404);
+                    throw new Error('Product not found: ' . $productId);
                 }
                 $products[] = $product;
             }    
@@ -105,7 +112,8 @@
                     $attribute = self::getEntityManager()->getRepository(\App\Entities\Attribute::class)->find($selectedAttributeId);
                     
                     if (!$attribute) {
-                        throw new \Exception('Attribute not found: ' . $selectedAttributeId);
+                        http_response_code(404);
+                        throw new Error('Attribute not found: ' . $selectedAttributeId);
                     }
 
                     $orderItemAttribute = new \App\Entities\OrderItemAttribute();

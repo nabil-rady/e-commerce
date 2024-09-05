@@ -6,6 +6,7 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\NonNull;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ListOfType;
+use GraphQL\Error\Error;
 
 use App\DataFetcher;
 
@@ -22,7 +23,7 @@ class Query extends ObjectType
                     'args' => [
                         'id' => new NonNull(Type::id()),
                     ],
-                    'resolve' => static function($rootValue, array $args): array {
+                    'resolve' => static function($rootValue, array $args): array|Error {
                         return DataFetcher::getCategory($args['id']);
                     }
                 ],
@@ -39,7 +40,7 @@ class Query extends ObjectType
                     'args' => [
                         'productId' => new NonNull(Type::id()),
                     ] ,
-                    'resolve' => static function($rootValue, array $args): array {
+                    'resolve' => static function($rootValue, array $args): array|Error {
                         return DataFetcher::getAttributesByProductId($args['productId']);
                     }
                 ],
@@ -59,7 +60,7 @@ class Query extends ObjectType
                     'args' => [
                         'id' => new NonNull(Type::id()),
                     ] ,
-                    'resolve' => static function($rootValue, array $args): array {
+                    'resolve' => static function($rootValue, array $args): array|Error {
                         return DataFetcher::getProductById($args['id']);
                     }
                 ]

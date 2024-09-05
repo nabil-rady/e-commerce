@@ -7,6 +7,8 @@ use GraphQL\Type\Schema;
 use GraphQL\Type\SchemaConfig;
 use App\Type\Query;
 use App\Type\Mutation;
+use GraphQL\Error\Error;
+use PDO;
 use RuntimeException;
 use Throwable;
 
@@ -28,9 +30,13 @@ class GraphQL {
             $query = $input['query'];
         
             $result = GraphQLBase::executeQuery($schema, $query);
+            
             if(count($result->errors) !== 0){
-                http_response_code(500);
+                if(http_response_code() === 200){
+                    http_response_code(500);
+                }
             }
+
             $output = $result->toArray();
         } catch (Throwable $e) {
             error_log($e->getMessage());
