@@ -12,7 +12,8 @@ use Doctrine\ORM\Mapping\ManyToOne;
 
 #[Entity]
 #[Table('product_images')]
-class ProductImage {
+class ProductImage
+{
     #[Id]
     #[Column(), GeneratedValue]
     private int $id;
@@ -24,7 +25,8 @@ class ProductImage {
     #[JoinColumn(name: 'product_id', referencedColumnName: 'id')]
     private ?Product $product = null;
 
-    public function getLink(): string {
+    public function getLink(): string
+    {
         return $this->link;
     }
 }

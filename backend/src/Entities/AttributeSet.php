@@ -15,7 +15,8 @@ use Doctrine\ORM\Mapping\ManyToOne;
 
 #[Entity]
 #[Table('attribute_sets')]
-class AttributeSet {
+class AttributeSet
+{
     #[Id]
     #[Column(), GeneratedValue]
     private int $id;
@@ -35,20 +36,22 @@ class AttributeSet {
     #[ManyToOne(targetEntity: Product::class, inversedBy: 'attributeSets', fetch: 'EAGER')]
     #[JoinColumn(name: 'product_id', referencedColumnName: 'id')]
     private ?Product $product = null;
-    
+
     #[OneToMany(targetEntity: Attribute::class, mappedBy: 'attributeSet')]
     private Collection $items;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->items = new ArrayCollection();
     }
 
-    public function toArray(): array {
+    public function toArray(): array
+    {
         return [
             'id' => $this->attributeSetId,
             'type' => $this->type,
             'name' => $this->name,
-            'items' => $this->items->map(function($item){
+            'items' => $this->items->map(function ($item) {
                 return $item->toArray();
             })->toArray(),
         ];

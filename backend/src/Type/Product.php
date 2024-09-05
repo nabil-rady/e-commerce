@@ -6,7 +6,8 @@ use GraphQL\Type\Definition\ListOfType;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 
-class Product extends ObjectType {
+class Product extends ObjectType
+{
     public function __construct()
     {
         parent::__construct([
@@ -22,21 +23,21 @@ class Product extends ObjectType {
                 'gallery' => [
                     'description' => 'Product images',
                     'type' => new ListOfType(Type::string()),
-                    'resolve' => static function(array $rootValue){
+                    'resolve' => static function (array $rootValue) {
                         return $rootValue['gallery'];
                     }
                 ],
                 'category' => [
                     'type' => TypeRegistry::load(Category::class),
                     'description' => 'Product Category',
-                    'resolve' => static function (array $rootValue){
+                    'resolve' => static function (array $rootValue) {
                         return $rootValue['category'];
                     }
                 ],
                 'attributes' => [
                     'type' => new ListOfType(TypeRegistry::load(AttributeSet::class)),
                     'description' => 'Product Attribute Set',
-                    'resolve' => static function (array $rootValue){
+                    'resolve' => static function (array $rootValue) {
                         return $rootValue['attributes'];
                     }
                 ]

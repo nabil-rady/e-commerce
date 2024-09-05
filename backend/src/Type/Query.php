@@ -7,7 +7,6 @@ use GraphQL\Type\Definition\NonNull;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ListOfType;
 use GraphQL\Error\Error;
-
 use App\DataFetcher;
 
 class Query extends ObjectType
@@ -23,14 +22,14 @@ class Query extends ObjectType
                     'args' => [
                         'id' => new NonNull(Type::id()),
                     ],
-                    'resolve' => static function($rootValue, array $args): array|Error {
+                    'resolve' => static function ($rootValue, array $args): array|Error {
                         return DataFetcher::getCategory($args['id']);
                     }
                 ],
                 'categories' => [
                     'type' => new ListOfType(TypeRegistry::load(Category::class)),
                     'description' => 'Returns all categories',
-                    'resolve' => static function($rootValue, array $args): array {
+                    'resolve' => static function ($rootValue, array $args): array {
                         return DataFetcher::getCategories();
                     }
                 ],
@@ -40,7 +39,7 @@ class Query extends ObjectType
                     'args' => [
                         'productId' => new NonNull(Type::id()),
                     ] ,
-                    'resolve' => static function($rootValue, array $args): array|Error {
+                    'resolve' => static function ($rootValue, array $args): array|Error {
                         return DataFetcher::getAttributesByProductId($args['productId']);
                     }
                 ],
@@ -50,7 +49,7 @@ class Query extends ObjectType
                     'args' => [
                         'category' => new NonNull(Type::string()),
                     ] ,
-                    'resolve' => static function($rootValue, array $args): array {
+                    'resolve' => static function ($rootValue, array $args): array {
                         return DataFetcher::getProductsByCategory($args['category']);
                     }
                 ],
@@ -60,12 +59,12 @@ class Query extends ObjectType
                     'args' => [
                         'id' => new NonNull(Type::id()),
                     ] ,
-                    'resolve' => static function($rootValue, array $args): array|Error {
+                    'resolve' => static function ($rootValue, array $args): array|Error {
                         return DataFetcher::getProductById($args['id']);
                     }
                 ]
             ],
         ]);
-        
+
     }
 }

@@ -4,11 +4,11 @@ namespace App\Type;
 
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
-
 use App\DataFetcher;
 use GraphQL\Type\Definition\ListOfType;
 
-class AttributeSet extends ObjectType {
+class AttributeSet extends ObjectType
+{
     public function __construct()
     {
         parent::__construct([
@@ -21,7 +21,7 @@ class AttributeSet extends ObjectType {
                 'items' => [
                     'type' => new ListOfType(TypeRegistry::load(Attribute::class)),
                     'description' => 'Atrribute Items',
-                    'resolve' => static function(array $rootValue){
+                    'resolve' => static function (array $rootValue) {
                         return $rootValue['items'];
                     },
                 ]

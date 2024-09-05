@@ -13,7 +13,8 @@ use Doctrine\ORM\Mapping\OneToMany;
 
 #[Entity]
 #[Table('orders')]
-class Order {
+class Order
+{
     #[Id]
     #[Column]
     #[GeneratedValue]
@@ -22,18 +23,21 @@ class Order {
     #[OneToMany(targetEntity: OrderItem::class, mappedBy: "order", fetch: "EAGER")]
     private Collection $items;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->items = new ArrayCollection();
     }
 
-    public function addItem(OrderItem $orderItem) {
+    public function addItem(OrderItem $orderItem)
+    {
         return $this->items[] = $orderItem;
     }
 
-    public function toArray(): array {
+    public function toArray(): array
+    {
         return [
             'id' => $this->id,
-            'items' => $this->items->map(function (OrderItem $items){
+            'items' => $this->items->map(function (OrderItem $items) {
                 return $items->toArray();
             })->toArray()
         ];

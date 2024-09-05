@@ -12,7 +12,8 @@ use Doctrine\ORM\Mapping\ManyToOne;
 
 #[Entity]
 #[Table('attributes')]
-class Attribute {
+class Attribute
+{
     #[Id]
     #[Column(), GeneratedValue]
     private int $id;
@@ -30,7 +31,8 @@ class Attribute {
     #[JoinColumn(name: 'attribute_set_id', referencedColumnName: 'id')]
     private ?AttributeSet $attributeSet = null;
 
-    public function toArray(): array {
+    public function toArray(): array
+    {
         return [
             '_id' => $this->id,
             'id' => $this->attributeId,

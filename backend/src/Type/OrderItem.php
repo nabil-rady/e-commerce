@@ -6,7 +6,8 @@ use GraphQL\Type\Definition\ListOfType;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 
-class OrderItem extends ObjectType {
+class OrderItem extends ObjectType
+{
     public function __construct()
     {
         parent::__construct([

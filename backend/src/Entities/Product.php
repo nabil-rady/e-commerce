@@ -15,7 +15,8 @@ use Doctrine\ORM\Mapping\OneToOne;
 
 #[Entity]
 #[Table('products')]
-class Product {
+class Product
+{
     #[Id]
     #[Column()]
     private string $id;
@@ -45,20 +46,24 @@ class Product {
     #[OneToMany(targetEntity: ProductImage::class, mappedBy: 'product', fetch: 'EAGER')]
     private Collection $gallery;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->attributeSets = new ArrayCollection();
         $this->gallery = new ArrayCollection();
     }
 
-    public function getAttributeSet(): Collection {
+    public function getAttributeSet(): Collection
+    {
         return $this->attributeSets;
     }
 
-    public function getCategory(): Category{
+    public function getCategory(): Category
+    {
         return $this->category;
     }
 
-    public function toArray(): array {
+    public function toArray(): array
+    {
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -67,10 +72,10 @@ class Product {
             'brand' => $this->brand,
             'description' => $this->description,
             'category' => $this->category->toArray(),
-            'attributes' => $this->attributeSets->map(function(AttributeSet $attributeSet) {
+            'attributes' => $this->attributeSets->map(function (AttributeSet $attributeSet) {
                 return $attributeSet->toArray();
             }),
-            'gallery' => $this->gallery->map(function(ProductImage $productImage){
+            'gallery' => $this->gallery->map(function (ProductImage $productImage) {
                 return $productImage->getLink();
             }),
         ];
