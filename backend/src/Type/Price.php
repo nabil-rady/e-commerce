@@ -12,9 +12,9 @@ class Price extends ObjectType
         parent::__construct([
             'name' => 'Price',
             'description' => 'Product price',
-            'fields' => static fn (): array => [
+            'fields' => static fn(): array => [
                 'currency' => TypeRegistry::load(Currency::class),
-                'amount' => Type::float(),
+                'amount' => Type::string(),
             ]
         ]);
     }

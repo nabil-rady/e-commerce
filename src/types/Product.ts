@@ -12,7 +12,7 @@ export interface Product {
 }
 
 export interface Price {
-  amount: number;
+  amount: string;
   currency: Currency;
 }
 

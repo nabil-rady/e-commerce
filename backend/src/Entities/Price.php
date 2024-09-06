@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\DBAL\Types\Types;
 
 #[Entity]
 #[Table('prices')]
@@ -29,8 +30,8 @@ class Price
     #[JoinColumn(name: 'currency_label', referencedColumnName: 'label')]
     private Currency $currency;
 
-    #[Column()]
-    private float $amount;
+    #[Column(type: Types::DECIMAL)]
+    private string $amount;
 
     public function toArray(): array
     {
