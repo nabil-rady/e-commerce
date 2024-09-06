@@ -70,7 +70,10 @@ class ProductComponent extends React.Component<ProductComponentProps> {
           />
         </div>
         <h2 className="font-light text-lg">{this.props.product.name}</h2>
-        <p className="text-lg">${this.props.product.price}</p>
+        <p className="text-lg">
+          {this.props.product.prices[0].currency.symbol}
+          {this.props.product.prices[0].amount}
+        </p>
       </div>
     );
   }

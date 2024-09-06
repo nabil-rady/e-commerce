@@ -57,7 +57,10 @@ class ProductDetails extends React.Component<
           />
           <div className="font-bold">
             <h2 className="text-lg">Price:</h2>
-            <p className="text-2xl">${this.props.product.price}</p>
+            <p className="text-2xl">
+              {this.props.product.prices[0].currency.symbol}
+              {this.props.product.prices[0].amount}
+            </p>
           </div>
           <button
             type="submit"

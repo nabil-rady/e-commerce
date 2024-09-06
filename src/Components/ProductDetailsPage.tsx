@@ -35,8 +35,14 @@ function getProductQuery(productId: string) {
               gallery
               description
               inStock
-              price
               brand
+              prices {
+                amount
+                currency{
+                  label
+                  symbol
+                }
+              }
               attributes {
                   id
                   name

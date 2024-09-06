@@ -115,7 +115,10 @@ class CartOverlay extends React.Component<CartOverlayProps, CartOverlayState> {
               >
                 <div className="w-1/3">
                   <h3 className="font-light">{product.name}</h3>
-                  <p className="font-normal">${product.price}</p>
+                  <p className="font-normal">
+                    {product.prices[0].currency.symbol}
+                    {product.prices[0].amount}
+                  </p>
                   <AttributesComponent
                     overlay
                     attributeSets={product.attributes}
@@ -157,7 +160,7 @@ class CartOverlay extends React.Component<CartOverlayProps, CartOverlayState> {
           <div className="flex my-4">
             <h3 className="font-medium">Total</h3>
             <p className="ml-auto font-bold" data-testid="cart-total">
-              ${totalPriceInCart(this.props.cart)}
+              {totalPriceInCart(this.props.cart)}
             </p>
           </div>
           <button

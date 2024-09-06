@@ -28,13 +28,13 @@ class Product
     private bool $inStock;
 
     #[Column()]
-    private float $price;
-
-    #[Column()]
     private string $brand;
 
     #[Column()]
     private string $description;
+
+    #[OneToMany(targetEntity: Price::class, mappedBy: 'product', fetch: 'EAGER')]
+    private Collection $prices;
 
     #[ManyToOne(targetEntity: Category::class, fetch: 'EAGER')]
     #[JoinColumn(name: 'category_id', referencedColumnName: 'id')]
@@ -49,6 +49,7 @@ class Product
     public function __construct()
     {
         $this->attributeSets = new ArrayCollection();
+        $this->prices = new ArrayCollection();
         $this->gallery = new ArrayCollection();
     }
 
@@ -68,10 +69,12 @@ class Product
             'id' => $this->id,
             'name' => $this->name,
             'inStock' => $this->inStock,
-            'price' => $this->price,
             'brand' => $this->brand,
             'description' => $this->description,
             'category' => $this->category->toArray(),
+            'prices' => $this->prices->map(function (Price $price) {
+                return $price->toArray();
+            }),
             'attributes' => $this->attributeSets->map(function (AttributeSet $attributeSet) {
                 return $attributeSet->toArray();
             }),

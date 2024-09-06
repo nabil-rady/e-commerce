@@ -17,9 +17,9 @@ class Product extends ObjectType
                 'id' => Type::string(),
                 'name' => Type::string(),
                 'inStock' => Type::boolean(),
-                'price' => Type::float(),
                 'brand' => Type::string(),
                 'description' => Type::string(),
+                'prices' => new ListOfType(TypeRegistry::load(Price::class)),
                 'gallery' => [
                     'description' => 'Product images',
                     'type' => new ListOfType(Type::string()),

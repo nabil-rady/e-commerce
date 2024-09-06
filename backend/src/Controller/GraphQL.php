@@ -7,8 +7,7 @@ use GraphQL\Type\Schema;
 use GraphQL\Type\SchemaConfig;
 use App\Type\Query;
 use App\Type\Mutation;
-use GraphQL\Error\Error;
-use PDO;
+use GraphQL\Error\DebugFlag;
 use RuntimeException;
 use Throwable;
 
@@ -19,8 +18,8 @@ class GraphQL
         try {
             $schema = new Schema(
                 (new SchemaConfig())
-                ->setQuery(new Query())
-                ->setMutation(new Mutation())
+                    ->setQuery(new Query())
+                    ->setMutation(new Mutation())
             );
 
             $rawInput = file_get_contents('php://input');
@@ -39,7 +38,7 @@ class GraphQL
                 }
             }
 
-            $output = $result->toArray();
+            $output = $result->toArray(DebugFlag::INCLUDE_DEBUG_MESSAGE);
         } catch (Throwable $e) {
             error_log($e->getMessage());
             http_response_code(500);

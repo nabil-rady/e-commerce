@@ -5,8 +5,18 @@ export interface Product {
   name: string;
   description: string;
   inStock: boolean;
-  price: number;
+  prices: Price[];
   brand: string;
   gallery: string[];
   attributes: AttributeSet[];
+}
+
+export interface Price {
+  amount: number;
+  currency: Currency;
+}
+
+export interface Currency {
+  symbol: string;
+  label: string;
 }
