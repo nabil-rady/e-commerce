@@ -20,7 +20,7 @@ class Order
     #[GeneratedValue]
     protected int $id;
 
-    #[OneToMany(targetEntity: OrderItem::class, mappedBy: "order", fetch: "EAGER")]
+    #[OneToMany(targetEntity: OrderItem::class, mappedBy: "order")]
     private Collection $items;
 
     public function __construct()

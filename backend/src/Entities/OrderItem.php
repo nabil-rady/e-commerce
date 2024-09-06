@@ -24,14 +24,14 @@ class OrderItem
     #[Column()]
     private float $quantity;
 
-    #[OneToMany(targetEntity: OrderItemAttribute::class, mappedBy: "orderItem", fetch: "EAGER")]
+    #[OneToMany(targetEntity: OrderItemAttribute::class, mappedBy: "orderItem")]
     private Collection $attributes;
 
-    #[ManyToOne(targetEntity: Order::class, inversedBy: "items", fetch: "EAGER")]
+    #[ManyToOne(targetEntity: Order::class, inversedBy: "items")]
     #[JoinColumn(name: "order_id", referencedColumnName: "id")]
     private $order;
 
-    #[ManyToOne(targetEntity: Product::class, fetch: "EAGER")]
+    #[ManyToOne(targetEntity: Product::class)]
     #[JoinColumn(name: "product_id", referencedColumnName: "id")]
     private $product;
 

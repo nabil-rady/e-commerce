@@ -33,7 +33,7 @@ class AttributeSet
     #[Column('product_id')]
     private string $productId;
 
-    #[ManyToOne(targetEntity: Product::class, inversedBy: 'attributeSets', fetch: 'EAGER')]
+    #[ManyToOne(targetEntity: Product::class, inversedBy: 'attributeSets')]
     #[JoinColumn(name: 'product_id', referencedColumnName: 'id')]
     private ?Product $product = null;
 

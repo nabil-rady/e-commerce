@@ -5,6 +5,7 @@ namespace App\Type;
 use GraphQL\Type\Definition\ListOfType;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
+use App\DataFetcher;
 
 class Product extends ObjectType
 {
@@ -13,7 +14,7 @@ class Product extends ObjectType
         parent::__construct([
             'name' => 'Product',
             'description' => 'Product',
-            'fields' => static fn (): array => [
+            'fields' => static fn(): array => [
                 'id' => Type::string(),
                 'name' => Type::string(),
                 'inStock' => Type::boolean(),
@@ -38,7 +39,7 @@ class Product extends ObjectType
                     'type' => new ListOfType(TypeRegistry::load(AttributeSet::class)),
                     'description' => 'Product Attribute Set',
                     'resolve' => static function (array $rootValue) {
-                        return $rootValue['attributes'];
+                        return DataFetcher::getAttributesByProductId($rootValue['id']);
                     }
                 ]
             ]

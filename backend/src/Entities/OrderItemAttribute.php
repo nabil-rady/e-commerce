@@ -18,11 +18,11 @@ class OrderItemAttribute
     #[Column(), GeneratedValue]
     private $id;
 
-    #[ManyToOne(targetEntity: OrderItem::class, inversedBy: "attributes", fetch: "EAGER")]
+    #[ManyToOne(targetEntity: OrderItem::class, inversedBy: "attributes")]
     #[JoinColumn(name: "order_item_id", referencedColumnName: "id")]
     private $orderItem;
 
-    #[ManyToOne(targetEntity: Attribute::class, fetch: "EAGER")]
+    #[ManyToOne(targetEntity: Attribute::class)]
     #[JoinColumn(name: "attribute_id", referencedColumnName: "id")]
     private $attribute;
 

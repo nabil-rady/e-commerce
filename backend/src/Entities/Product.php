@@ -33,17 +33,17 @@ class Product
     #[Column()]
     private string $description;
 
-    #[OneToMany(targetEntity: Price::class, mappedBy: 'product', fetch: 'EAGER')]
+    #[OneToMany(targetEntity: Price::class, mappedBy: 'product')]
     private Collection $prices;
 
     #[ManyToOne(targetEntity: Category::class, fetch: 'EAGER')]
     #[JoinColumn(name: 'category_id', referencedColumnName: 'id')]
     private ?Category $category = null;
 
-    #[OneToMany(targetEntity: AttributeSet::class, mappedBy: 'product', fetch: 'EAGER')]
+    #[OneToMany(targetEntity: AttributeSet::class, mappedBy: 'product')]
     private Collection $attributeSets;
 
-    #[OneToMany(targetEntity: ProductImage::class, mappedBy: 'product', fetch: 'EAGER')]
+    #[OneToMany(targetEntity: ProductImage::class, mappedBy: 'product')]
     private Collection $gallery;
 
     public function __construct()
@@ -74,9 +74,6 @@ class Product
             'category' => $this->category->toArray(),
             'prices' => $this->prices->map(function (Price $price) {
                 return $price->toArray();
-            }),
-            'attributes' => $this->attributeSets->map(function (AttributeSet $attributeSet) {
-                return $attributeSet->toArray();
             }),
             'gallery' => $this->gallery->map(function (ProductImage $productImage) {
                 return $productImage->getLink();

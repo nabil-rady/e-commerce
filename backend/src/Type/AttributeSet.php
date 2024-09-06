@@ -14,16 +14,13 @@ class AttributeSet extends ObjectType
         parent::__construct([
             'name' => 'AttributeSet',
             'description' => 'Product Attribute Set',
-            'fields' => static fn (): array => [
+            'fields' => static fn(): array => [
                 'id' => Type::string(),
                 'type' => Type::string(),
                 'name' => Type::string(),
                 'items' => [
                     'type' => new ListOfType(TypeRegistry::load(Attribute::class)),
                     'description' => 'Atrribute Items',
-                    'resolve' => static function (array $rootValue) {
-                        return $rootValue['items'];
-                    },
                 ]
             ],
         ]);

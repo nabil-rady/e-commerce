@@ -5,17 +5,18 @@ namespace App;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\ORM\QueryBuilder;
 use GraphQL\Error\Error;
 
 class DataFetcher
 {
     private static ?EntityManager $entityManager = null;
 
-    public static function getEntityManager(): EntityManager
+    private static function getEntityManager(): EntityManager
     {
         if (self::$entityManager === null) {
             $config = ORMSetup::createAttributeMetadataConfiguration(
-                paths: [__DIR__."/Entities"],
+                paths: [__DIR__ . "/Entities"],
                 isDevMode: true
             );
             $connectionParams = [
@@ -29,6 +30,29 @@ class DataFetcher
             self::$entityManager = new EntityManager($connection, $config);
         }
         return self::$entityManager;
+    }
+
+    private static function getProductQuery(): QueryBuilder
+    {
+        $queryBuilder = self::getEntityManager()->createQueryBuilder();
+
+        return $queryBuilder->select('p', 'c', 'pr', 'cu', 'g',)
+            ->from(\App\Entities\Product::class, 'p')
+            ->leftJoin('p.category', 'c')
+            ->leftJoin('p.prices', 'pr')
+            ->leftJoin('p.gallery', 'g')
+            ->leftJoin('pr.currency', 'cu');
+    }
+
+    private static function getAttributesQuery(string $productId): QueryBuilder
+    {
+        $queryBuilder = self::getEntityManager()->createQueryBuilder();
+
+        return $queryBuilder->select('aset', 'a')
+            ->from(\App\Entities\AttributeSet::class, 'aset')
+            ->leftJoin('aset.items', 'a')
+            ->where('aset.productId = :productId')
+            ->setParameter('productId', $productId);
     }
 
     public static function getCategory(int $id): Error|array
@@ -51,9 +75,7 @@ class DataFetcher
 
     public static function getAttributesByProductId(string $productId): array
     {
-        $attributeSets = self::getEntityManager()->getRepository(\App\Entities\AttributeSet::class)->findBy([
-            'productId' => $productId,
-        ]);
+        $attributeSets = self::getAttributesQuery($productId)->getQuery()->getResult();
         return array_map(function (\App\Entities\AttributeSet $attributeSet) {
             return $attributeSet->toArray();
         }, $attributeSets);
@@ -61,7 +83,7 @@ class DataFetcher
 
     public static function getProducts(): array
     {
-        $products =  self::getEntityManager()->getRepository(\App\Entities\Product::class)->findAll();
+        $products =  self::getProductQuery()->getQuery()->getResult();
         return array_map(function (\App\Entities\Product $product) {
             return $product->toArray();
         }, $products);
@@ -73,16 +95,11 @@ class DataFetcher
             return self::getProducts();
         }
 
-        $dql = '
-                SELECT p
-                FROM App\Entities\Product p
-                JOIN p.category c
-                WHERE c.name = :categoryName
-            ';
-        $query = self::getEntityManager()->createQuery($dql)
-            ->setParameter('categoryName', $categoryName);
-
-        $products = $query->getResult();
+        $products = self::getProductQuery()
+            ->where('c.name = :categoryName')
+            ->setParameter('categoryName', $categoryName)
+            ->getQuery()
+            ->getResult();
         return array_map(function (\App\Entities\Product $product) {
             return $product->toArray();
         }, $products);
@@ -90,7 +107,11 @@ class DataFetcher
 
     public static function getProductById(string $productId): array|Error
     {
-        $product = self::getEntityManager()->find(\App\Entities\Product::class, $productId);
+        $product = self::getProductQuery()
+            ->where('p.id = :productId')
+            ->setParameter('productId', $productId)
+            ->getQuery()->getOneOrNullResult();
+
         if ($product) {
             return $product->toArray();
         }
