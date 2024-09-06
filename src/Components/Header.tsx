@@ -79,7 +79,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               {this.state.categories.map((category, index) => (
                 <Link
                   key={index}
-                  to={`/${category}`}
+                  to={`/${category.toLocaleLowerCase()}`}
                   onClick={() => this.props.changeCurrentCategory(category)}
                   data-testid={
                     this.props.currentCategory === category

@@ -107,7 +107,7 @@ class ProductListing extends React.Component<ProductListingProps> {
             <Link
               key={product.id}
               to={{
-                pathname: `/product/${product.id}`,
+                pathname: `/product/${product.id.toLowerCase()}`,
                 state: {
                   product,
                 },
