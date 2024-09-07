@@ -21,10 +21,10 @@ class DataFetcher
             );
             $connectionParams = [
                 'driver'   => 'pdo_mysql',
-                'host'     => '127.0.0.1',
-                'dbname'   => 'scandiwebtask',
-                'user'     => 'root',
-                'password' => '123',
+                'host'     => $_ENV['DB_HOST'],
+                'dbname'   => $_ENV['DB_NAME'],
+                'user'     => $_ENV['DB_USER'],
+                'password' => $_ENV['DB_PASSWORD'],
             ];
             $connection = DriverManager::getConnection($connectionParams, $config);
             self::$entityManager = new EntityManager($connection, $config);
