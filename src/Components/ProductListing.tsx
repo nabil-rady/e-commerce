@@ -10,7 +10,10 @@ import ApolloClientContext from "../ApolloClientContext.tsx";
 
 interface ProductListingProps
   extends RouteComponentProps<{ categoryName?: string }> {
-  addToCart: (product: Product, selectedAttributes?: Attribute[]) => void;
+  addToCart: (
+    product: Product,
+    selectedAttributes?: (Attribute | null)[]
+  ) => void;
   changeCurrentCategory: (category: string) => void;
 }
 
@@ -27,9 +30,7 @@ function getProductQuery(category: string) {
             id
             name
             gallery
-            description
             inStock
-            brand
             prices {
               amount
               currency {
@@ -42,9 +43,9 @@ function getProductQuery(category: string) {
                 name
                 type
                 items {
-                id
-                value
-                displayValue
+                  id
+                  value
+                  displayValue
                 }
             }
         }
@@ -108,9 +109,6 @@ class ProductListing extends React.Component<ProductListingProps> {
               key={product.id}
               to={{
                 pathname: `/product/${product.id.toLowerCase()}`,
-                state: {
-                  product,
-                },
               }}
             >
               <ProductComponent

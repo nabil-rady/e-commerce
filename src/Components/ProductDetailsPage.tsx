@@ -8,6 +8,7 @@ import { Product } from "../types/Product.ts";
 import { Attribute } from "../types/Attribute.ts";
 import Carousel from "./Carousel.tsx";
 import ProductDetails from "./ProductDetails.tsx";
+import Loading from "./Loading.tsx";
 
 interface ProductDetailsPageProps
   extends RouteComponentProps<
@@ -17,7 +18,10 @@ interface ProductDetailsPageProps
       product?: Product;
     }
   > {
-  addToCart: (product: Product, selectedAttributes?: Attribute[]) => void;
+  addToCart: (
+    product: Product,
+    selectedAttributes?: (Attribute | null)[]
+  ) => void;
 }
 
 interface ProductDetailsPageState {
@@ -66,7 +70,7 @@ class ProductDetailsPage extends React.Component<
   context!: ApolloClient<object>;
 
   state: ProductDetailsPageState = {
-    product: this.props.location.state?.product ?? null,
+    product: null,
     loading: false,
     error: null,
   };
@@ -91,13 +95,11 @@ class ProductDetailsPage extends React.Component<
   }
 
   componentDidMount() {
-    if (!this.state.product) {
-      this.fetchProduct().catch((err) => console.error(err));
-    }
+    this.fetchProduct().catch((err) => console.error(err));
   }
 
   render(): React.ReactNode {
-    if (!this.state.product) return null;
+    if (!this.state.product) return <Loading />;
     return (
       <div className="w-5/6 mx-auto mt-16 lg:flex gap-24">
         <Carousel gallery={this.state.product.gallery} />

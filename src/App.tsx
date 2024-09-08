@@ -41,23 +41,29 @@ class App extends React.Component<{}, AppState> {
     });
   };
 
-  addToCart = (product: Product, selectedAttributes?: Attribute[]) => {
+  addToCart = (product: Product, selectedAttributes?: (Attribute | null)[]) => {
     selectedAttributes =
       selectedAttributes ??
       (product.attributes.map(
         (attributeSet) => attributeSet.items[0]
       ) as Attribute[]);
+    if (
+      selectedAttributes.some((selectedAttribute) => selectedAttribute === null)
+    ) {
+      throw new Error("Must selected attributes to add product to cart");
+    }
     this.setState((prevState) => {
       if (prevState.cart[product.id] === undefined) {
         return {
           ...prevState,
+          overlayOpen: true,
           cart: {
             ...prevState.cart,
             [product.id]: [
               {
                 product,
                 quantity: 1,
-                selectedAttributes,
+                selectedAttributes: selectedAttributes as Attribute[],
               },
             ],
           },
@@ -66,7 +72,7 @@ class App extends React.Component<{}, AppState> {
       if (
         prevState.cart[product.id].some((el) => {
           for (let i = 0; i < el.selectedAttributes.length; i++) {
-            if (selectedAttributes[i].id !== el.selectedAttributes[i].id) {
+            if (selectedAttributes[i]!.id !== el.selectedAttributes[i].id) {
               return false;
             }
           }
@@ -77,6 +83,7 @@ class App extends React.Component<{}, AppState> {
       }
       return {
         ...prevState,
+        overlayOpen: true,
         cart: {
           ...prevState.cart,
           [product.id]: [
@@ -84,15 +91,26 @@ class App extends React.Component<{}, AppState> {
             {
               product,
               quantity: 1,
-              selectedAttributes,
+              selectedAttributes: selectedAttributes as Attribute[],
             },
           ],
         },
       };
     });
-    toast("Product added to cart", {
-      autoClose: 1500,
-    });
+    if (
+      !this.state.cart[product.id].some((el) => {
+        for (let i = 0; i < el.selectedAttributes.length; i++) {
+          if (selectedAttributes[i]!.id !== el.selectedAttributes[i].id) {
+            return false;
+          }
+        }
+        return true;
+      })
+    ) {
+      toast("Product added to cart", {
+        autoClose: 1500,
+      });
+    }
   };
 
   toggleOverlay = () => {

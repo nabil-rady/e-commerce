@@ -7,7 +7,10 @@ import { Attribute } from "../types/Attribute.ts";
 interface ProductComponentProps {
   index: number;
   product: Product;
-  addToCart: (product: Product, selectedAttributes?: Attribute[]) => void;
+  addToCart: (
+    product: Product,
+    selectedAttributes?: (Attribute | null)[]
+  ) => void;
 }
 
 function getClassName(product: Product, index: number): string {
@@ -41,7 +44,7 @@ class ProductComponent extends React.Component<ProductComponentProps> {
     return (
       <div
         className={getClassName(this.props.product, this.props.index)}
-        data-testid={toKebabCase(this.props.product.name)}
+        data-testid={"product-" + toKebabCase(this.props.product.name)}
       >
         <div
           className={

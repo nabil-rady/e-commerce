@@ -103,6 +103,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           <button
             className="relative cursor-pointer"
             onClick={this.props.toggleOverlay}
+            data-testid="cart-btn"
           >
             {count !== 0 && (
               <div className="absolute font-roboto flex justify-center items-center w-[20px] h-[20px] leading-none rounded-full font-bold text-sm text-white bg-darkGray right-0 top-0 translate-x-1/2 -translate-y-1/2">

@@ -4,7 +4,7 @@ import toKebabCase from "../utils/toKebabCase.ts";
 
 interface AttributeProps {
   attributeSet: AttributeSet;
-  selectedAttribute: Attribute;
+  selectedAttribute: Attribute | null;
   index: number;
   overlay?: boolean;
   setAttribute?: (attirbute: Attribute, index: number) => void;
@@ -18,10 +18,15 @@ class SwatchAttribute extends React.Component<AttributeProps> {
 
   render(): React.ReactNode {
     const attributeContainerClassName = this.props.overlay
-      ? "w-[20px] h-[20px] flex justify-center border-2 border-black enabled:hover:border-primary has-[:checked]:border-primary enabled:cursor-pointer"
-      : "w-[36px] h-[36px] flex justify-center border-2 border-black enabled:hover:border-primary has-[:checked]:border-primary enabled:cursor-pointer";
+      ? "w-[20px] h-[20px] flex justify-center border-2 border-black has-[:enabled]:hover:border-primary has-[:checked]:border-primary has-[:enabled]:cursor-pointer"
+      : "w-[36px] h-[36px] flex justify-center border-2 border-black has-[:enabled]:hover:border-primary has-[:checked]:border-primary has-[:enabled]:cursor-pointer";
     return (
-      <div className="flex flex-wrap my-2 gap-2">
+      <div
+        className="flex flex-wrap my-2 gap-2"
+        data-testid={
+          "product-attribute-" + toKebabCase(this.props.attributeSet.name)
+        }
+      >
         {this.props.attributeSet.items.map((attribute, index) => (
           <label
             key={attribute.id}
@@ -34,10 +39,13 @@ class SwatchAttribute extends React.Component<AttributeProps> {
                   toKebabCase(this.props.attributeSet.name) +
                   "-" +
                   toKebabCase(attribute.id) +
-                  (this.props.selectedAttribute.id === attribute.id
+                  (this.props.selectedAttribute?.id === attribute.id
                     ? "-selected"
                     : "")
-                : ""
+                : "product-attribute-" +
+                  toKebabCase(this.props.attributeSet.name) +
+                  "-" +
+                  attribute.value
             }
             className={attributeContainerClassName}
           >
@@ -56,7 +64,7 @@ class SwatchAttribute extends React.Component<AttributeProps> {
               onChange={() => {
                 this.setAttribute(attribute, this.props.index);
               }}
-              checked={this.props.selectedAttribute.id === attribute.id}
+              checked={this.props.selectedAttribute?.id === attribute.id}
               className="appearance-none"
             />
           </label>
@@ -81,12 +89,29 @@ class TextAttribute extends React.Component<AttributeProps> {
         data-testid={
           this.props.overlay
             ? "cart-item-attribute-" + toKebabCase(this.props.attributeSet.name)
-            : toKebabCase(this.props.attributeSet.name)
+            : "product-attribute-" + toKebabCase(this.props.attributeSet.name)
         }
         className="flex flex-wrap my-2 gap-2"
       >
         {this.props.attributeSet.items.map((attribute, index) => (
-          <label key={attribute.id} className={attributeContainerClassName}>
+          <label
+            key={attribute.id}
+            className={attributeContainerClassName}
+            data-testid={
+              this.props.overlay
+                ? "cart-item-attribute-" +
+                  toKebabCase(this.props.attributeSet.name) +
+                  "-" +
+                  toKebabCase(attribute.id) +
+                  (this.props.selectedAttribute?.id === attribute.id
+                    ? "-selected"
+                    : "")
+                : "product-attribute-" +
+                  toKebabCase(this.props.attributeSet.name) +
+                  "-" +
+                  attribute.value
+            }
+          >
             {attribute.displayValue}
             <input
               aria-disabled={this.props.overlay}
@@ -94,7 +119,7 @@ class TextAttribute extends React.Component<AttributeProps> {
               type="radio"
               data-displayvalue={attribute.displayValue}
               data-id={attribute.id}
-              checked={this.props.selectedAttribute.id === attribute.id}
+              checked={this.props.selectedAttribute?.id === attribute.id}
               onChange={() => {
                 this.setAttribute(attribute, this.props.index);
               }}
@@ -110,7 +135,7 @@ class TextAttribute extends React.Component<AttributeProps> {
 
 function renderAttribute(
   attributeSet: AttributeSet,
-  selectedAttribute: Attribute,
+  selectedAttribute: Attribute | null,
   index: number,
   setAttribute?: (attribute: Attribute, index: number) => void,
   overlay?: boolean

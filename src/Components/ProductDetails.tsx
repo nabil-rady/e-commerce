@@ -8,11 +8,14 @@ import { Attribute } from "../types/Attribute.ts";
 
 interface ProductDetailsProps {
   product: Product;
-  addToCart: (product: Product, selectedAttributes?: Attribute[]) => void;
+  addToCart: (
+    product: Product,
+    selectedAttributes?: (Attribute | null)[]
+  ) => void;
 }
 
 interface ProductDetailsState {
-  selectedAttributes: Attribute[];
+  selectedAttributes: (Attribute | null)[];
 }
 
 class ProductDetails extends React.Component<
@@ -21,7 +24,7 @@ class ProductDetails extends React.Component<
 > {
   state = {
     selectedAttributes: this.props.product.attributes.map(
-      (attributeSet) => attributeSet.items[0]
+      (attributeSet) => null
     ),
   };
 
@@ -65,7 +68,13 @@ class ProductDetails extends React.Component<
           <button
             type="submit"
             data-testid="add-to-cart"
-            className="my-4 w-full py-4 px-8 font-semibold relative text-white bg-primary hover:scale-105 transition-transform"
+            disabled={
+              !this.props.product.inStock ||
+              this.state.selectedAttributes.some(
+                (selectedAttribute) => selectedAttribute === null
+              )
+            }
+            className="my-4 w-full py-4 px-8 font-semibold relative text-white bg-primary hover:scale-105 transition-transform disabled:opacity-50 disabled:hover:scale-100"
           >
             Add to cart
           </button>

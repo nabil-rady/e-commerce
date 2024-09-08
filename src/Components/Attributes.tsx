@@ -4,7 +4,7 @@ import { Attribute, AttributeSet } from "../types/Attribute";
 
 interface AttributesProps {
   attributeSets: AttributeSet[];
-  selectedAttributes: Attribute[];
+  selectedAttributes: (Attribute | null)[];
   overlay?: boolean;
   setAttribute?: (attribute: Attribute, index: number) => void;
 }
