@@ -10,6 +10,7 @@ import ApolloClientContext from "../ApolloClientContext.tsx";
 
 interface ProductListingProps
   extends RouteComponentProps<{ categoryName?: string }> {
+  currentCategory: string;
   addToCart: (
     product: Product,
     selectedAttributes?: (Attribute | null)[]
@@ -100,9 +101,7 @@ class ProductListing extends React.Component<ProductListingProps> {
   render(): React.ReactNode {
     return (
       <div className="m-5 w-5/6 mx-auto">
-        <h2 className="text-4xl my-16">
-          {this.props.match.params.categoryName ?? "All"}
-        </h2>
+        <h2 className="text-4xl my-16">{this.props.currentCategory}</h2>
         <div className="md:grid lg:grid-cols-3 md:grid-cols-2 gap-3 gap-y-5 justify-items-stretch">
           {this.state.products.map((product, index) => (
             <Link

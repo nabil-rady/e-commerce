@@ -203,6 +203,7 @@ class App extends React.Component<{}, AppState> {
               render={(props) => (
                 <ProductListing
                   {...props}
+                  currentCategory={this.state.currentCategory}
                   addToCart={this.addToCart}
                   changeCurrentCategory={this.changeCurrentCategory}
                 />
@@ -213,6 +214,7 @@ class App extends React.Component<{}, AppState> {
               render={(props) => (
                 <ProductListing
                   {...props}
+                  currentCategory={this.state.currentCategory}
                   addToCart={this.addToCart}
                   changeCurrentCategory={this.changeCurrentCategory}
                 />

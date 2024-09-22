@@ -70,7 +70,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     const count = countProductsInCart(this.props.cart);
     return (
       <header className="relative">
-        <div className="absolute left-1/2 top-2 -translate-x-1/2 cursor-pointer">
+        <div className="absolute left-1/2 top-2 -translate-x-1/2 cursor-pointer invisible md:visible">
           <img src="/logo.svg" alt="logo" />
         </div>
         <div className="flex justify-between w-5/6 pt-2 mx-auto items-center">

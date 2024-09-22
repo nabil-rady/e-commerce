@@ -97,7 +97,7 @@ class CartOverlay extends React.Component<CartOverlayProps, CartOverlayState> {
           this.props.closeOverlay();
         }}
         data-testid="cart-overlay"
-        className="absolute z-50 backdrop-blur-sm invisible left-0 right-0 bottom-0 top-[50px] bg-[rgba(57,55,72,0.22)]"
+        className="absolute z-50 invisible left-0 right-0 bottom-0 top-[50px] bg-[rgba(57,55,72,0.22)]"
       >
         <div
           onClick={(e) => {
